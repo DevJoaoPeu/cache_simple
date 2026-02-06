@@ -8,9 +8,9 @@ export class TransactionEntity {
   @Column({ name: 'amount', type: 'int' })
   amount: number;
 
-  @Column({ name: 'description', type: 'char' })
+  @Column({ name: 'description', type: 'varchar' })
   description: string;
 
-  @Column({ name: 'created_at', type: 'timestamp' })
+  @Column({ name: 'created_at', type: 'timestamp', default: new Date() })
   created_at: Date;
 }
