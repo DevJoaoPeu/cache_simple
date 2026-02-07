@@ -15,13 +15,38 @@ export class AppService {
     private readonly redis: Redis,
   ) {}
 
-  getAmount(businessId: number): number {
-    const amount = this.redis.get(`amount-${businessId}`);
+  async getAmount(businessId: number): Promise<number> {
+    const amount: string | null = await this.redis.get(`amount-${businessId}`);
 
-    return 0;
+    if (!amount) {
+      const transactions: TransactionEntity[] =
+        await this.transactionRepository.find({
+          where: { fk_business: +businessId },
+        });
+
+      const totalAmount: number = transactions.reduce(
+        (sum: number, transaction: TransactionEntity): number =>
+          sum + transaction.amount,
+        0,
+      );
+
+      this.redis.set(`amount-${businessId}`, totalAmount.toString());
+
+      return totalAmount;
+    }
+
+    return +amount;
   }
 
   async createTransaction(dto: ITransaction): Promise<void> {
+    const { fk_business, amount } = dto;
+
+    const prevAmount: number = Number(
+      (await this.redis.get(`amount-${fk_business}`)) || 0,
+    );
+
+    this.redis.set(`amount-${fk_business}`, prevAmount + amount);
+
     await this.transactionRepository.save(dto);
   }
 
