@@ -21,9 +21,4 @@ services:
       redis-server
       --appendonly yes
       --maxmemory-policy noeviction
-    volumes:
-      - redis-data:/data
     restart: unless-stopped
-
-volumes:
-  redis-data:
