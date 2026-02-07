@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ITransaction } from './dto/transaction.dto';
 import { TransactionEntity } from './entities/transaction.entity';
@@ -8,8 +8,8 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  getAmount(): number {
-    return this.appService.getAmount();
+  getAmount(@Body('businessId') businessId: number): number {
+    return this.appService.getAmount(businessId);
   }
 
   @Post()
@@ -20,5 +20,10 @@ export class AppController {
   @Get('/all')
   async getAllTransactions(): Promise<TransactionEntity[]> {
     return await this.appService.getAllTransactions();
+  }
+
+  @Delete(':id')
+  async dropTransaction(@Param('id') transactionId: number): Promise<void> {
+    await this.appService.dropTransaction(transactionId);
   }
 }

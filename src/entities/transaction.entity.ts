@@ -8,6 +8,9 @@ export class TransactionEntity {
   @Column({ name: 'amount', type: 'int' })
   amount: number;
 
+  @Column({ name: 'fk_business', type: 'int' })
+  fk_business: number;
+
   @Column({ name: 'description', type: 'varchar' })
   description: string;
 
