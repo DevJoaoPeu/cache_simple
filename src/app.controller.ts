@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { AppService } from './app.service';
 import { ITransaction } from './dto/transaction.dto';
 import { TransactionEntity } from './entities/transaction.entity';
@@ -8,7 +16,7 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  getAmount(@Body('businessId') businessId: number): number {
+  getAmount(@Query('businessId') businessId: number): Promise<number> {
     return this.appService.getAmount(businessId);
   }
 
